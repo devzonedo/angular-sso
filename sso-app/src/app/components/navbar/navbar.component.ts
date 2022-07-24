@@ -12,8 +12,14 @@ export class NavbarComponent implements OnInit {
 
   constructor(private oauthService: OAuthService) { }
 
+  name: string = "";
+  userClaims:any;
+
   ngOnInit(): void {
     this.configureSingleSingnOn();
+    const userClaims: any = this.oauthService.getIdentityClaims();
+    this.name = userClaims.name ? userClaims.name: "";
+    this.userClaims = userClaims;
   }
 
 
@@ -29,6 +35,12 @@ export class NavbarComponent implements OnInit {
 
   logout(){
     this.oauthService.logOut();
+  }
+
+
+  get token(){
+    let claims: any = this.oauthService.getIdentityClaims();
+    return claims ? claims : null; 
   }
 
 }
