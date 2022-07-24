@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
 
@@ -8,18 +8,23 @@ import { Observable } from 'rxjs';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private oauthService: OAuthService){
+  constructor(private oauthService: OAuthService, private router: Router) {
 
   }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    
-      var hasIdToken = this.oauthService.hasValidIdToken();
-      var hasAccessToken = this.oauthService.hasValidAccessToken();
-      return (hasIdToken && hasIdToken);
-      
+
+    var hasIdToken = this.oauthService.hasValidIdToken();
+    var hasAccessToken = this.oauthService.hasValidAccessToken();
+    if (hasIdToken && hasIdToken) {
+      return true;
+    } else {
+      this.router.navigate(["/welcome"]);
+      return false;
+    }
+
   }
-  
+
 }
